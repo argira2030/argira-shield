@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Argira Shield 🛡️ · Digital Protection</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F4F2ED;
+  --surface: #FFFFFF;
+  --border: #E0DAD0;
+  --text: #18160F;
+  --muted: #7A7568;
+  --shield: #1B4332;
+  --shield-light: #D8EAE0;
+  --warn: #92400E;
+  --warn-light: #FEF3C7;
+  --danger: #991B1B;
+  --danger-light: #FEE2E2;
+  --safe: #1B4332;
+  --safe-light: #D8EAE0;
+  --gold: #B45309;
+  --r: 14px;
+  --shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* HEADER */
+.site-header {
+  background: var(--shield);
+  color: white;
+  padding: 24px 20px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% -20%, rgba(255,255,255,0.08) 0%, transparent 60%);
+}
+
+.site-header h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  position: relative;
+}
+
+.site-header h1 .shield-icon { font-size: 1.6rem; margin-right: 8px; }
+
+.site-header p {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 4px;
+  font-weight: 300;
+  position: relative;
+}
+
+.version-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 99px;
+  padding: 3px 10px;
+  font-size: 0.7rem;
+  font-family: 'DM Mono', monospace;
+  margin-top: 8px;
+  position: relative;
+}
+
+/* AI GLOBAL PANEL */
+.ai-panel {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ai-panel-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--shield);
+  white-space: nowrap;
+}
+
+.ai-panel input[type="password"] {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.ai-panel input:focus { border-color: var(--shield); }
+
+.ai-status {
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ai-status.offline { background: var(--border); color: var(--muted); }
+.ai-status.ready { background: var(--shield-light); color: var(--shield); }
+
+/* MAIN LAYOUT */
+.container { max-width: 740px; margin: 0 auto; padding: 28px 16px 60px; }
+
+/* MODULE */
+.module {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.module:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.10); }
+
+.module-header {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.module-header.open { border-color: var(--border); }
+
+.module-header-left { display: flex; align-items: center; gap: 12px; }
+
+.module-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.module-icon.verifica { background: #EEF2FF; }
+.module-icon.permiso { background: var(--shield-light); }
+.module-icon.huella { background: #FEF3C7; }
+
+.module-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.module-subtitle {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.module-chevron {
+  font-size: 0.8rem;
+  color: var(--muted);
+  transition: transform 0.3s;
+}
+
+.module-chevron.open { transform: rotate(180deg); }
+
+.module-body {
+  padding: 20px;
+  display: none !important;
+  animation: fadeIn 0.2s ease;
+}
+
+.module-body.open { display: block !important; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* FORMS */
+.field { margin-bottom: 14px; }
+
+.field label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.field textarea,
+.field input[type="text"] {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+
+.field textarea { min-height: 100px; }
+.field textarea:focus, .field input:focus { border-color: var(--shield); background: #fff; }
+
+.tabs-mini {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  background: var(--bg);
+  padding: 3px;
+  border-radius: 9px;
+}
+
+.tab-mini {
+  flex: 1;
+  padding: 8px 6px;
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tab-mini.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.panel-mini { display: none; }
+.panel-mini.active { display: block; }
+
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 9px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg);
+}
+
+.upload-zone:hover { border-color: var(--shield); background: var(--shield-light); }
+.upload-zone p { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+.upload-zone input { display: none; }
+
+.action-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--shield);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+
+.action-btn:hover { background: #0f2d20; transform: translateY(-1px); }
+.action-btn.warn-btn { background: var(--warn); }
+.action-btn.warn-btn:hover { background: #713208; }
+
+/* RESULTS */
+.result-box {
+  margin-top: 16px;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.result-box.show { display: block; }
+
+.verdict-card {
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.verdict-card.safe { background: var(--safe-light); border: 1.5px solid #a7c4af; }
+.verdict-card.warn { background: var(--warn-light); border: 1.5px solid #fbbf24; }
+.verdict-card.danger { background: var(--danger-light); border: 1.5px solid #fca5a5; }
+
+.verdict-icon { font-size: 1.8rem; flex-shrink: 0; }
+
+.verdict-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.verdict-card.safe .verdict-title { color: var(--safe); }
+.verdict-card.warn .verdict-title { color: var(--warn); }
+.verdict-card.danger .verdict-title { color: var(--danger); }
+
+.verdict-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+.score-row {
+  background: var(--bg);
+  border-radius: 9px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.score-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bar { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; }
+.bar-inner { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+.bar-inner.safe { background: var(--safe); }
+.bar-inner.warn { background: var(--warn); }
+.bar-inner.danger { background: var(--danger); }
+
+.perm-row {
+  border-left: 3px solid var(--border);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  background: var(--surface);
+  border-radius: 0 8px 8px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.perm-row.ok { border-color: var(--safe); }
+.perm-row.suspicious { border-color: var(--warn); }
+.perm-row.dangerous { border-color: var(--danger); }
+
+.perm-name { font-family: 'DM Mono', monospace; font-size: 0.78rem; font-weight: 500; }
+.perm-desc { font-size: 0.76rem; color: var(--muted); margin-top: 2px; }
+
+.badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 99px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge.ok { background: var(--safe-light); color: var(--safe); }
+.badge.suspicious { background: var(--warn-light); color: var(--warn); }
+.badge.dangerous { background: var(--danger-light); color: var(--danger); }
+
+.ai-result-card {
+  background: linear-gradient(135deg, #f0f7f2 0%, #e8f4ec 100%);
+  border: 1.5px solid #a7c4af;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+
+.ai-result-card h4 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--shield);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reset-link {
+  font-size: 0.78rem;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 10px;
+  display: block;
+  text-align: center;
+  padding: 8px;
+}
+
+.reset-link:hover { color: var(--text); }
+
+/* HUELLA MODULE */
+.huella-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.huella-item {
+  background: var(--bg);
+  border-radius: 9px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+}
+
+.huella-item .h-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.huella-item .h-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text);
+  word-break: break-all;
+}
+
+.huella-item .h-risk {
+  font-size: 0.68rem;
+  margin-top: 3px;
+}
+
+.huella-item.risk-high { border-color: #fbbf24; background: var(--warn-light); }
+.huella-item.risk-med { border-color: #d1d5db; }
+
+/* LOADER */
+.loader {
+  text-align: center;
+  padding: 30px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  display: none;
+}
+
+.spinner {
+  width: 22px; height: 22px;
+  border: 2px solid var(--border);
+  border-top-color: var(--shield);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto 10px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 24px 20px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+footer a { color: var(--shield); text-decoration: none; }
+
+@media (max-width: 480px) {
+  .huella-grid { grid-template-columns: 1fr; }
+  .site-header h1 { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <h1><span class="shield-icon">🛡️</span>Argira Shield</h1>
+  <p>Digital Protection Suite · Suite de Protección Digital</p>
+  <div class="version-badge">v2.0 · Argira Station 2026</div>
+</div>
+
+<!-- GLOBAL AI PANEL -->
+<div class="ai-panel">
+  <span class="ai-panel-label">🤖 Modo IA · AI Mode</span>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="ai-toggle-label" style="font-size:0.78rem;color:var(--muted);">OFF</span>
+    <div id="ai-toggle" onclick="toggleAI()" style="width:40px;height:22px;background:var(--border);border-radius:99px;cursor:pointer;position:relative;transition:background 0.2s;">
+      <div id="ai-toggle-knob" style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;top:2px;left:2px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+    </div>
+  </div>
+  <div id="ai-key-wrapper" style="display:none;flex:1;min-width:200px;">
+    <input type="password" id="global-api-key" placeholder="sk-ant-api..." oninput="updateAIStatus()" style="width:100%;padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Mono',monospace;font-size:0.78rem;background:var(--bg);outline:none;">
+  </div>
+  <span class="ai-status offline" id="ai-status-global">⚡ Offline</span>
+</div>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- MODULE 1: VERIFICA. -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="module">
+    <div class="module-header open" onclick="toggleModule('verifica')">
+      <div class="module-header-left">
+        <div class="module-icon verifica">🔍</div>
+        <div>
+          <div class="module-title">Verifica.</div>
+          <div class="module-subtitle">Detector de desinformación · Misinformation detector</div>
+        </div>
+      </div>
+      <span class="module-chevron open" id="chevron-verifica">▼</span>
+    </div>
+    <div class="module-body open" id="body-verifica">
+      <div class="field">
+        <label>Pega el titular o texto · Paste headline or text</label>
+        <textarea id="verifica-text" placeholder="Ej: ÚLTIMO MOMENTO: Científicos descubren que el agua causa cáncer según estudio secreto..."></textarea>
+      </div>
+      <button class="action-btn" onclick="runVerifica()">🔍 Verificar · Verify</button>
+
+      <div class="loader" id="loader-verifica"><div class="spinner"></div><p>Analizando… · Analyzing…</p></div>
+
+      <div class="result-box" id="result-verifica">
+        <div id="verifica-verdict"></div>
+        <div id="verifica-signals"></div>
+        <div id="verifica-ai"></div>
+        <button class="reset-link" onclick="resetModule('verifica')">← Analizar otro texto · Analyze another text</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- MODULE 2: PERMISOCLARO -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule('permiso')">
+      <div class="module-header-left">
+        <div class="module-icon permiso">🔐</div>
+        <div>
+          <div class="module-title">PermisoClaro</div>
+          <div class="module-subtitle">Analizador de permisos de app · App permission analyzer</div>
+        </div>
+      </div>
+      <span class="module-chevron" id="chevron-permiso">▼</span>
+    </div>
+    <div class="module-body" id="body-permiso">
+      <div class="tabs-mini">
+        <button class="tab-mini active" onclick="switchPermTab('text')" aria-label="Análisis general de permisos" role="tab">📋 General</button>
+        <button class="tab-mini" onclick="switchPermTab('name')" aria-label="Análisis por nombre de app" role="tab">🔍 App</button>
+        <button class="tab-mini" onclick="switchPermTab('image')" aria-label="Análisis por captura de pantalla" role="tab">📷 Captura</button>
+      </div>
+
+      <!-- TAB 1: General — solo selector -->
+      <div class="panel-mini active" id="ptab-text">
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;line-height:1.5;">
+          Selecciona los permisos que quieres analizar · Select the permissions to analyze
+        </p>
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px;">
+          Toca para seleccionar · Tap to select
+        </div>
+        <div id="perm-selector" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"></div>
+        <button class="reset-link" style="text-align:left;margin-top:0;padding:4px 0;" onclick="clearPermSelector('perm-selector')">✕ Limpiar · Clear</button>
+        <input type="hidden" id="perm-text" value="">
+      </div>
+
+      <!-- TAB 2: App específica — nombre + selector -->
+      <div class="panel-mini" id="ptab-name">
+        <div class="field">
+          <label>Nombre de la app · App name</label>
+          <input type="text" id="perm-app-name" placeholder="Ej: Temu, TikTok, Linterna Pro...">
+        </div>
+        <div class="field">
+          <label>¿Para qué sirve? · Purpose</label>
+          <input type="text" id="perm-app-purpose" placeholder="Ej: compras, linterna, fotos...">
+        </div>
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px;">
+          Selecciona los permisos que pide · Select requested permissions
+        </div>
+        <div id="perm-selector-name" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"></div>
+        <button class="reset-link" style="text-align:left;margin-top:0;padding:4px 0;" onclick="clearPermSelector('perm-selector-name')">✕ Limpiar · Clear</button>
+        <input type="hidden" id="perm-name-text" value="">
+      </div>
+
+      <!-- TAB 3: Captura — foto + selector bilingüe -->
+      <div class="panel-mini" id="ptab-image">
+        <div class="field">
+          <label>Captura de la Play Store · Play Store screenshot</label>
+          <div class="upload-zone" onclick="document.getElementById('perm-file').click()">
+            <div style="font-size:1.6rem;">📷</div>
+            <p>Sube la captura de permisos · Upload permission screenshot</p>
+            <input type="file" id="perm-file" accept="image/*" onchange="handlePermImage(event)">
+          </div>
+          <div id="perm-img-preview" style="display:none;margin-top:10px;">
+            <img id="perm-img" style="width:100%;border-radius:8px;border:1px solid var(--border);">
+          </div>
+        </div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;line-height:1.5;">
+          ¿No puedes copiar los permisos de la pantalla? Selecciónalos aquí en español o inglés · Can't copy permissions? Select them here in Spanish or English
+        </p>
+        <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+          <button onclick="setPermLang('es')" id="lang-es" style="padding:4px 12px;border-radius:99px;border:1.5px solid var(--shield);background:var(--shield);color:white;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">ES 🇪🇸</button>
+          <button onclick="setPermLang('en')" id="lang-en" style="padding:4px 12px;border-radius:99px;border:1.5px solid var(--border);background:white;color:var(--muted);font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">EN 🇬🇧</button>
+        </div>
+        <div id="perm-selector-image" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"></div>
+        <button class="reset-link" style="text-align:left;margin-top:0;padding:4px 0;" onclick="clearPermSelector('perm-selector-image')">✕ Limpiar · Clear</button>
+        <input type="hidden" id="perm-image-text" value="">
+      </div>
+
+      <button class="action-btn" onclick="runPermiso()">🔐 Analizar · Analyze</button>
+
+      <div class="loader" id="loader-permiso"><div class="spinner"></div><p>Analizando permisos… · Analyzing permissions…</p></div>
+
+      <div class="result-box" id="result-permiso" role="region" aria-label="Resultado del análisis de permisos">
+        <div id="permiso-ai"></div>
+        <div id="permiso-verdict"></div>
+        <div id="permiso-score"></div>
+        <div id="permiso-summary"></div>
+        <div id="permiso-list"></div>
+
+        <!-- Lector de voz accesible -->
+        <div class="voice-reader" id="voice-permiso" style="display:none;margin-top:16px;padding:14px;background:var(--bg);border-radius:12px;border:1px solid var(--border);">
+          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:10px;">
+            🔊 Lector de voz · Voice reader
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button onclick="speakPermiso()" id="play-permiso"
+              aria-label="Leer resultado en voz alta"
+              style="padding:10px 16px;border-radius:10px;border:1.5px solid var(--shield);background:transparent;
+              color:var(--shield);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;">
+              ▶ Leer resultado · Read result
+            </button>
+            <button onclick="stopPermiso()" id="stop-permiso"
+              aria-label="Detener lectura"
+              style="padding:10px 16px;border-radius:10px;border:1.5px solid var(--border);background:transparent;
+              color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;display:none;">
+              ⏹ Detener · Stop
+            </button>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+            <label for="speed-permiso" style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;">Velocidad</label>
+            <input type="range" id="speed-permiso" min="0.5" max="2" step="0.1" value="0.9"
+              aria-label="Velocidad de lectura"
+              style="flex:1;accent-color:var(--shield);">
+            <span id="speed-permiso-val" style="font-size:0.72rem;color:var(--shield);font-family:'DM Mono',monospace;">0.9x</span>
+          </div>
+        </div>
+
+        <button class="reset-link" onclick="resetModule('permiso')">← Analizar otra app · Analyze another app</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- MODULE 3: HUELLA DIGITAL -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule('huella')">
+      <div class="module-header-left">
+        <div class="module-icon huella">🌐</div>
+        <div>
+          <div class="module-title">Huella Digital</div>
+          <div class="module-subtitle">Lo que tu navegador expone · What your browser reveals</div>
+        </div>
+      </div>
+      <span class="module-chevron" id="chevron-huella">▼</span>
+    </div>
+    <div class="module-body" id="body-huella">
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:16px;line-height:1.6;">
+        Tu navegador expone datos sin que lo sepas. Aquí los ves en tiempo real.<br>
+        <span style="font-size:0.78rem;">Your browser exposes data without you knowing. See them here in real time.</span>
+      </p>
+
+      <div class="huella-grid" id="huella-grid">
+        <!-- filled by JS -->
+      </div>
+
+      <div id="huella-cookie-section">
+        <div class="field" style="margin-top:8px;">
+          <label>Analizar cookies (pega el texto de la política) · Analyze cookies (paste policy text)</label>
+          <textarea id="cookie-text" placeholder="Pega aquí la política de cookies o los datos de cookies de una web...&#10;Paste cookie policy or cookie data here..." style="min-height:80px;"></textarea>
+        </div>
+        <button class="action-btn warn-btn" onclick="runHuella()">🌐 Analizar huella · Analyze footprint</button>
+      </div>
+
+      <div class="loader" id="loader-huella"><div class="spinner"></div><p>Analizando huella… · Analyzing footprint…</p></div>
+
+      <div class="result-box" id="result-huella">
+        <div id="huella-verdict"></div>
+        <div id="huella-ai"></div>
+        <button class="reset-link" onclick="resetModule('huella')">← Nueva análisis · New analysis</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- MODULE 4: VALIDADOR DE CÓDIGO -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule('codigo')">
+      <div class="module-header-left">
+        <div class="module-icon" style="background:#F3E8FF;">🧹</div>
+        <div>
+          <div class="module-title">Validador de Código</div>
+          <div class="module-subtitle">Detecta comillas, caracteres invisibles y errores silenciosos · Detects silent code bugs</div>
+        </div>
+      </div>
+      <span class="module-chevron" id="chevron-codigo">▼</span>
+    </div>
+    <div class="module-body" id="body-codigo">
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:16px;line-height:1.6;">
+        Pega código HTML, JS o CSS para detectar comillas tipográficas, caracteres invisibles y otros errores silenciosos que rompen el código sin avisar.<br>
+        <span style="font-size:0.78rem;">Paste HTML, JS or CSS to detect typographic quotes, invisible characters and other silent bugs.</span>
+      </p>
+      <div class="field">
+        <label>Pega tu código · Paste your code</label>
+        <textarea id="codigo-text" placeholder="Pega aquí tu código HTML, JavaScript o CSS..." style="min-height:120px;font-family:'DM Mono',monospace;font-size:0.78rem;"></textarea>
+      </div>
+      <button class="action-btn" style="background:#7C3AED;" onclick="runCodigo()">🧹 Validar · Validate</button>
+
+      <div class="loader" id="loader-codigo"><div class="spinner"></div><p>Analizando código… · Analyzing code…</p></div>
+
+      <div class="result-box" id="result-codigo">
+        <div id="codigo-verdict"></div>
+        <div id="codigo-issues"></div>
+        <div id="codigo-fixed"></div>
+        <button class="reset-link" onclick="resetModule('codigo')">← Validar otro código · Validate another code</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- MODULE 5: ANALIZADOR DE METADATOS -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="module">
+    <div class="module-header" onclick="toggleModule('meta')">
+      <div class="module-header-left">
+        <div class="module-icon" style="background:#FEF3C7;">🔎</div>
+        <div>
+          <div class="module-title">Metadatos</div>
+          <div class="module-subtitle">Lo que esconden tus archivos · What your files hide inside</div>
+        </div>
+      </div>
+      <span class="module-chevron" id="chevron-meta">▼</span>
+    </div>
+    <div class="module-body" id="body-meta">
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:16px;line-height:1.6;">
+        Sube una imagen, PDF o archivo de audio para ver los metadatos ocultos — fecha, dispositivo, ubicación GPS, software usado y más.<br>
+        <span style="font-size:0.78rem;">Upload an image, PDF or audio file to reveal hidden metadata — date, device, GPS location, software and more.</span>
+      </p>
+
+      <div class="field">
+        <label>Sube tu archivo · Upload your file</label>
+        <div class="upload-zone" onclick="document.getElementById('meta-file').click()" id="meta-upload-zone">
+          <div style="font-size:1.6rem;">🔎</div>
+          <p>JPG · PNG · PDF · MP3 · WAV</p>
+          <p style="font-size:0.72rem;margin-top:4px;">Toca para subir · Tap to upload</p>
+          <input type="file" id="meta-file" accept="image/*,.pdf,.mp3,.wav,.ogg" onchange="handleMetaFile(event)" style="display:none;">
+        </div>
+        <div id="meta-filename" style="display:none;margin-top:8px;font-size:0.78rem;font-family:'DM Mono',monospace;color:var(--shield);padding:8px 12px;background:var(--shield-light);border-radius:8px;"></div>
+      </div>
+
+      <button class="action-btn" style="background:#B45309;" onclick="runMeta()" id="meta-btn" disabled>🔎 Analizar metadatos · Analyze metadata</button>
+
+      <div class="loader" id="loader-meta"><div class="spinner"></div><p>Leyendo metadatos… · Reading metadata…</p></div>
+
+      <div class="result-box" id="result-meta">
+        <div id="meta-verdict"></div>
+        <div id="meta-table"></div>
+        <div id="meta-ai"></div>
+        <button class="reset-link" onclick="resetModule('meta')">← Analizar otro archivo · Analyze another file</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>🛡️ Argira Shield v2.0 · Suite de Protección Digital · Jose Ranero García · 2026</p>
+  <p style="margin-top:4px;">
+    <a href="https://argira-verifica.netlify.app/" target="_blank">Verifica.</a> ·
+    <a href="https://argira-permisoclaro.netlify.app/" target="_blank">PermisoClaro</a> ·
+    <a href="https://zenodo.org/records/18912843" target="_blank">Ecosystem Map</a> ·
+    DOI: 10.5281/zenodo.18953249 · MIT License
+  </p>
+</footer>
+
+<script>
+// ═══════════════════════════════
+// UTILITIES
+// ═══════════════════════════════
+function getAPIKey() { return document.getElementById('global-api-key').value; }
+
+function toggleAI() {
+  const wrapper = document.getElementById('ai-key-wrapper');
+  const toggle = document.getElementById('ai-toggle');
+  const knob = document.getElementById('ai-toggle-knob');
+  const label = document.getElementById('ai-toggle-label');
+  const isOn = wrapper.style.display !== 'none';
+  if (isOn) {
+    wrapper.style.display = 'none';
+    toggle.style.background = 'var(--border)';
+    knob.style.left = '2px';
+    label.textContent = 'OFF';
+    document.getElementById('global-api-key').value = '';
+    updateAIStatus();
+  } else {
+    wrapper.style.display = 'flex';
+    toggle.style.background = 'var(--shield)';
+    knob.style.left = '20px';
+    label.textContent = 'ON';
+  }
+}
+
+function updateAIStatus() {
+  const key = getAPIKey();
+  const el = document.getElementById('ai-status-global');
+  if (key.startsWith('sk-ant-')) {
+    el.className = 'ai-status ready';
+    el.textContent = '🤖 IA lista · AI ready';
+  } else {
+    el.className = 'ai-status offline';
+    el.textContent = '⚡ Offline';
+  }
+}
+
+function toggleModule(id) {
+  const body = document.getElementById('body-' + id);
+  const chevron = document.getElementById('chevron-' + id);
+  const header = body.previousElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+  if (id === 'huella' && !isOpen) loadHuellaData();
+  if (id === 'permiso' && !isOpen) buildPermSelector();
+}
+
+function showLoader(id) {
+  document.getElementById('loader-' + id).style.display = 'block';
+  document.getElementById('result-' + id).classList.remove('show');
+}
+
+function hideLoader(id) {
+  document.getElementById('loader-' + id).style.display = 'none';
+}
+
+function showResult(id) {
+  document.getElementById('result-' + id).classList.add('show');
+}
+
+function resetModule(id) {
+  document.getElementById('result-' + id).classList.remove('show');
+  if (id === 'verifica') {
+    document.getElementById('verifica-text').value = '';
+    document.getElementById('verifica-verdict').innerHTML = '';
+    document.getElementById('verifica-signals').innerHTML = '';
+    document.getElementById('verifica-ai').innerHTML = '';
+  } else if (id === 'permiso') {
+    ['perm-selector','perm-selector-name','perm-selector-image'].forEach(sid => clearPermSelector(sid));
+    document.getElementById('perm-app-name').value = '';
+    document.getElementById('perm-app-purpose').value = '';
+    document.getElementById('permiso-verdict').innerHTML = '';
+    document.getElementById('permiso-score').innerHTML = '';
+    document.getElementById('permiso-summary').innerHTML = '';
+    document.getElementById('permiso-list').innerHTML = '';
+    document.getElementById('permiso-ai').innerHTML = '';
+    document.getElementById('perm-img-preview').style.display = 'none';
+    document.getElementById('voice-permiso').style.display = 'none';
+    stopPermiso();
+  } else if (id === 'huella') {
+    document.getElementById('cookie-text').value = '';
+    document.getElementById('huella-verdict').innerHTML = '';
+    document.getElementById('huella-ai').innerHTML = '';
+  } else if (id === 'codigo') {
+    document.getElementById('codigo-text').value = '';
+    document.getElementById('codigo-verdict').innerHTML = '';
+    document.getElementById('codigo-issues').innerHTML = '';
+    document.getElementById('codigo-fixed').innerHTML = '';
+  } else if (id === 'meta') {
+    metaFileData = null;
+    document.getElementById('meta-file').value = '';
+    document.getElementById('meta-filename').style.display = 'none';
+    document.getElementById('meta-btn').disabled = true;
+    document.getElementById('meta-verdict').innerHTML = '';
+    document.getElementById('meta-table').innerHTML = '';
+    document.getElementById('meta-ai').innerHTML = '';
+  }
+}
+
+// ═══════════════════════════════
+// AI CALL
+// ═══════════════════════════════
+async function callClaude(prompt, useWebSearch) {
+  const key = getAPIKey();
+  if (!key.startsWith('sk-ant-')) return null;
+  try {
+    const body = {
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    };
+    if (useWebSearch) body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const s = clean.indexOf('{'), e = clean.lastIndexOf('}');
+    if (s === -1 || e === -1) return null;
+    return JSON.parse(clean.slice(s, e + 1));
+  } catch(e) { return null; }
+}
+
+// ═══════════════════════════════
+// MODULE 1: VERIFICA.
+// ═══════════════════════════════
+
+// Patterns (subset — expandable)
+const VERIFICA_PATTERNS = [
+  { id:'alarm', weight:3, es:'Lenguaje alarmista', en:'Alarmist language', patterns:[/URGENTE/i,/ÚLTIMO MOMENTO/i,/BREAKING/i,/ALERTA/i,/PELIGRO INMEDIATO/i,/¡¡/,/!!/] },
+  { id:'absolute', weight:2, es:'Afirmaciones absolutas', en:'Absolute claims', patterns:[/TODOS LOS/i,/NADIE SABE/i,/SIEMPRE/i,/NUNCA/i,/100%/i,/DEFINITIVAMENTE/i,/SIN DUDA/i] },
+  { id:'conspiracy', weight:3, es:'Narrativa conspirativa', en:'Conspiracy narrative', patterns:[/LO QUE NO QUIEREN QUE SEPAS/i,/SECRETO/i,/OCULTAN/i,/ELLOS NO QUIEREN/i,/CENSURADO/i,/PROHIBIDO/i,/DEEP STATE/i] },
+  { id:'clickbait', weight:2, es:'Clickbait', en:'Clickbait', patterns:[/NO PODRÁS CREER/i,/TE SORPRENDERÁ/i,/IMPACTANTE/i,/VIRAL/i,/LO QUE PASÓ DESPUÉS/i,/INCREÍBLE/i] },
+  { id:'nosource', weight:2, es:'Sin fuentes verificables', en:'No verifiable sources', patterns:[/SEGÚN FUENTES/i,/SE DICE QUE/i,/DICEN QUE/i,/AL PARECER/i,/SUPUESTAMENTE/i] },
+  { id:'health', weight:3, es:'Desinformación de salud', en:'Health misinformation', patterns:[/CURA EL CÁNCER/i,/MÉDICOS OCULTAN/i,/REMEDIO SECRETO/i,/VENENO EN/i,/MATA AL/i,/PROVOCA CÁNCER/i] },
+  { id:'caps', weight:1, es:'Mayúsculas excesivas', en:'Excessive capitals', test: t => (t.replace(/[^A-ZÁÉÍÓÚ]/g,'').length / t.replace(/\s/g,'').length) > 0.4 },
+  { id:'emotional', weight:2, es:'Lenguaje emocional extremo', en:'Extreme emotional language', patterns:[/VERGONZOSO/i,/ESCANDALOSO/i,/INDIGNANTE/i,/TERRIBLE/i,/CATASTRÓFICO/i,/DESTRUYE/i] },
+];
+
+function runVerifica() {
+  const text = document.getElementById('verifica-text').value.trim();
+  if (!text) { alert('Por favor introduce un texto · Please enter a text'); return; }
+  showLoader('verifica');
+
+  const signals = [];
+  let totalWeight = 0;
+
+  VERIFICA_PATTERNS.forEach(p => {
+    let hit = false;
+    if (p.patterns) hit = p.patterns.some(rx => rx.test(text));
+    else if (p.test) hit = p.test(text);
+    if (hit) { signals.push(p); totalWeight += p.weight; }
+  });
+
+  const score = Math.min(100, totalWeight * 14);
+  const key = getAPIKey();
+
+  if (key.startsWith('sk-ant-')) {
+    document.querySelector('#loader-verifica p').textContent = '🤖 Consultando IA… · Consulting AI…';
+    const prompt = `Eres un experto en verificación de hechos y detección de desinformación.
+Analiza este texto: "${text}"
+Responde SOLO en JSON:
+{
+  "es_desinformacion": true|false,
+  "nivel_riesgo": "bajo|medio|alto|crítico",
+  "señales_es": ["señal 1", "señal 2"],
+  "veredicto_es": "veredicto en español (2 frases)",
+  "veredicto_en": "verdict in English (2 sentences)",
+  "recomendacion_es": "recomendación concreta"
+}`;
+    callClaude(prompt, true).then(ai => {
+      hideLoader('verifica');
+      renderVerifica(text, signals, score, ai);
+      showResult('verifica');
+    }).catch(() => {
+      hideLoader('verifica');
+      renderVerifica(text, signals, score, null);
+      showResult('verifica');
+    });
+  } else {
+    setTimeout(() => {
+      hideLoader('verifica');
+      renderVerifica(text, signals, score, null);
+      showResult('verifica');
+    }, 700);
+  }
+}
+
+function renderVerifica(text, signals, score, ai) {
+  let vClass, vIcon, vTitleES, vTitleEN;
+  if (score >= 60) { vClass='danger'; vIcon='⚠️'; vTitleES='Alto riesgo de desinformación'; vTitleEN='High misinformation risk'; }
+  else if (score >= 30) { vClass='warn'; vIcon='🔶'; vTitleES='Precaución — revisa las fuentes'; vTitleEN='Caution — check the sources'; }
+  else { vClass='safe'; vIcon='✅'; vTitleES='Señales de desinformación bajas'; vTitleEN='Low misinformation signals'; }
+
+  document.getElementById('verifica-verdict').innerHTML = `
+    <div class="verdict-card ${vClass}">
+      <div class="verdict-icon">${vIcon}</div>
+      <div>
+        <div class="verdict-title">${vTitleES} · ${vTitleEN}</div>
+        <div class="verdict-desc">Señales detectadas: ${signals.length} · Score: ${score}/100</div>
+      </div>
+    </div>
+  `;
+
+  if (signals.length > 0) {
+    let sigHTML = '<div style="margin-bottom:12px;">';
+    signals.forEach(s => {
+      sigHTML += `<div class="perm-row suspicious" style="margin-bottom:6px;">
+        <div><div class="perm-name">${s.es}</div><div class="perm-desc">${s.en}</div></div>
+        <div class="badge suspicious">⚠️ Señal</div>
+      </div>`;
+    });
+    sigHTML += '</div>';
+    document.getElementById('verifica-signals').innerHTML = sigHTML;
+  }
+
+  if (ai) {
+    document.getElementById('verifica-ai').innerHTML = `
+      <div class="ai-result-card">
+        <h4>🤖 Análisis IA · AI Analysis</h4>
+        <p style="font-size:0.85rem;line-height:1.6;margin-bottom:6px;">${ai.veredicto_es}</p>
+        <p style="font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:8px;">${ai.veredicto_en}</p>
+        <p style="font-size:0.8rem;font-weight:600;">💡 ${ai.recomendacion_es}</p>
+      </div>`;
+  }
+}
+
+// ═══════════════════════════════
+// MODULE 2: PERMISOCLARO
+// ═══════════════════════════════
+const PERMS_DB = {
+  'CAMERA':{ es:'Cámara', en:'Camera access', risk:'medium', cats:['photo','video','scanner','qr'] },
+  'RECORD_AUDIO':{ es:'Micrófono', en:'Microphone / record audio', risk:'high', cats:['voice','call','video'] },
+  'ACCESS_FINE_LOCATION':{ es:'Ubicación precisa', en:'Precise location', risk:'high', cats:['maps','weather','taxi','fitness'] },
+  'ACCESS_COARSE_LOCATION':{ es:'Ubicación aproximada', en:'Approximate location', risk:'medium', cats:['maps','weather'] },
+  'ACCESS_BACKGROUND_LOCATION':{ es:'Ubicación (todo el tiempo)', en:'Background location', risk:'critical', cats:['maps','taxi','fitness'] },
+  'READ_CONTACTS':{ es:'Contactos', en:'Read contacts', risk:'high', cats:['messaging','social','call'] },
+  'WRITE_CONTACTS':{ es:'Contactos (modificar)', en:'Modify contacts', risk:'high', cats:['messaging'] },
+  'READ_CALL_LOG':{ es:'Registros de llamadas', en:'Call history', risk:'critical', cats:['call'] },
+  'WRITE_CALL_LOG':{ es:'Registros de llamadas (modificar)', en:'Modify call history', risk:'critical', cats:[] },
+  'READ_SMS':{ es:'SMS', en:'Read SMS', risk:'critical', cats:['messaging'] },
+  'SEND_SMS':{ es:'SMS (enviar)', en:'Send SMS (possible cost)', risk:'high', cats:['messaging','2fa'] },
+  'READ_EXTERNAL_STORAGE':{ es:'Archivos', en:'Read storage files', risk:'medium', cats:['photo','file','media'] },
+  'WRITE_EXTERNAL_STORAGE':{ es:'Archivos (modificar)', en:'Write/delete files', risk:'medium', cats:['photo','file','media'] },
+  'MANAGE_EXTERNAL_STORAGE':{ es:'Archivos (acceso total)', en:'FULL storage access', risk:'critical', cats:['filemanager'] },
+  'GET_ACCOUNTS':{ es:'Identidad', en:'View Google/email accounts', risk:'high', cats:['sync','social'] },
+  'PACKAGE_USAGE_STATS':{ es:'Estadísticas de uso', en:'See which apps you use', risk:'critical', cats:['parental','security'] },
+  'BIND_ACCESSIBILITY_SERVICE':{ es:'Accesibilidad', en:'Accessibility service (reads screen)', risk:'critical', cats:['accessibility'] },
+  'SYSTEM_ALERT_WINDOW':{ es:'Mostrar sobre otras apps', en:'Display over other apps', risk:'high', cats:['accessibility','floating'] },
+  'DEVICE_ADMIN':{ es:'Administrador del dispositivo', en:'Device administrator', risk:'critical', cats:['security','mdm'] },
+  'INSTALL_PACKAGES':{ es:'Instalar apps', en:'Install other applications', risk:'critical', cats:['store'] },
+  'READ_PHONE_STATE':{ es:'Teléfono', en:'Phone state (IMEI...)', risk:'high', cats:['call','security'] },
+  'READ_PHONE_NUMBERS':{ es:'Teléfono (número)', en:'Read your phone number', risk:'high', cats:['call'] },
+  'CALL_PHONE':{ es:'Teléfono (llamadas)', en:'Make calls directly', risk:'high', cats:['call'] },
+  'BODY_SENSORS':{ es:'Salud y actividad física', en:'Body sensors', risk:'high', cats:['health','fitness'] },
+  'INTERNET':{ es:'Internet', en:'Internet access', risk:'low', cats:[] },
+  'VIBRATE':{ es:'Vibración', en:'Vibration', risk:'low', cats:[] },
+  'FLASHLIGHT':{ es:'Linterna', en:'Flashlight', risk:'low', cats:['flashlight'] },
+  'WAKE_LOCK':{ es:'Impedir suspensión', en:'Keep device awake', risk:'low', cats:['media','download'] },
+  'RECEIVE_BOOT_COMPLETED':{ es:'Inicio automático', en:'Auto-start on boot', risk:'medium', cats:['messaging','alarm'] },
+  'POST_NOTIFICATIONS':{ es:'Notificaciones', en:'Send notifications', risk:'low', cats:[] },
+  'ACCESS_NETWORK_STATE':{ es:'Estado de red', en:'View network state', risk:'low', cats:[] },
+  'NFC':{ es:'NFC', en:'NFC access (payments, data)', risk:'medium', cats:['payment'] },
+  'USE_BIOMETRIC':{ es:'Huella / Face ID', en:'Fingerprint / Face ID', risk:'medium', cats:['security','banking'] },
+  'BLUETOOTH':{ es:'Dispositivos cercanos', en:'Bluetooth access', risk:'medium', cats:['iot','wearable'] },
+  'BLUETOOTH_SCAN':{ es:'Dispositivos cercanos (escanear)', en:'Scan Bluetooth devices', risk:'medium', cats:['iot','location'] },
+};
+
+const APP_PURPOSES_MAP = {
+  'linterna':['flashlight'],'flashlight':['flashlight'],'calculadora':['calc'],'calculator':['calc'],
+  'reloj':['alarm'],'clock':['alarm'],'alarma':['alarm'],'alarm':['alarm'],
+  'fotos':['photo','editor'],'photos':['photo','editor'],'camara':['photo','video'],'camera':['photo','video'],
+  'mapas':['maps','location'],'maps':['maps','location'],'musica':['music','audio'],'music':['music','audio'],
+  'mensajería':['messaging','call'],'messaging':['messaging','call'],
+  'whatsapp':['messaging','call','video'],'telegram':['messaging','call','video'],
+  'redes sociales':['social','photo','video'],'social':['social','photo','video'],
+  'tiktok':['social','photo','video'],'instagram':['social','photo','video'],
+  'banco':['banking','security','payment'],'banking':['banking','security','payment'],
+  'fitness':['fitness','health','location'],'salud':['health','fitness'],'health':['health','fitness'],
+  'juego':['game'],'game':['game'],'editor':['photo','video','editor'],
+};
+
+function switchPermTab(tab) {
+  ['text','name','image'].forEach((t,i) => {
+    document.querySelectorAll('.tab-mini')[i].classList.toggle('active', t===tab);
+    document.getElementById('ptab-'+t).classList.toggle('active', t===tab);
+  });
+}
+
+function handlePermImage(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById('perm-img').src = ev.target.result;
+    document.getElementById('perm-img-preview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+// Spanish → Android key map
+const PERMS_ES_MAP = {
+  'camara':'CAMERA','cámara':'CAMERA',
+  'microfono':'RECORD_AUDIO','micrófono':'RECORD_AUDIO',
+  'ubicacion exacta':'ACCESS_FINE_LOCATION','ubicación exacta':'ACCESS_FINE_LOCATION','gps':'ACCESS_FINE_LOCATION',
+  'ubicacion aproximada':'ACCESS_COARSE_LOCATION','ubicación aproximada':'ACCESS_COARSE_LOCATION',
+  'ubicacion fondo':'ACCESS_BACKGROUND_LOCATION','ubicación fondo':'ACCESS_BACKGROUND_LOCATION',
+  'contactos':'READ_CONTACTS','leer contactos':'READ_CONTACTS',
+  'modificar contactos':'WRITE_CONTACTS',
+  'llamadas':'READ_CALL_LOG','historial llamadas':'READ_CALL_LOG',
+  'sms':'READ_SMS','leer sms':'READ_SMS',
+  'enviar sms':'SEND_SMS',
+  'almacenamiento':'READ_EXTERNAL_STORAGE','leer archivos':'READ_EXTERNAL_STORAGE',
+  'escribir archivos':'WRITE_EXTERNAL_STORAGE',
+  'acceso total':'MANAGE_EXTERNAL_STORAGE',
+  'cuentas google':'GET_ACCOUNTS',
+  'uso apps':'PACKAGE_USAGE_STATS',
+  'accesibilidad':'BIND_ACCESSIBILITY_SERVICE',
+  'sobre otras apps':'SYSTEM_ALERT_WINDOW',
+  'administrador':'DEVICE_ADMIN',
+  'instalar apps':'INSTALL_PACKAGES',
+  'estado telefono':'READ_PHONE_STATE','estado teléfono':'READ_PHONE_STATE',
+  'numero telefono':'READ_PHONE_NUMBERS','número teléfono':'READ_PHONE_NUMBERS',
+  'hacer llamadas':'CALL_PHONE',
+  'sensores corporales':'BODY_SENSORS',
+  'internet':'INTERNET',
+  'vibracion':'VIBRATE','vibración':'VIBRATE',
+  'linterna':'FLASHLIGHT',
+  'bluetooth':'BLUETOOTH','escanear bluetooth':'BLUETOOTH_SCAN',
+  'nfc':'NFC',
+  'huella dactilar':'USE_BIOMETRIC','face id':'USE_BIOMETRIC',
+  'notificaciones':'POST_NOTIFICATIONS',
+  'inicio automatico':'RECEIVE_BOOT_COMPLETED','inicio automático':'RECEIVE_BOOT_COMPLETED',
+};
+
+function normalize(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+}
+
+function parsePerms(text) {
+  if (!text) return [];
+  const results = new Set();
+  const parts = text.split(/[\n,;|]+/).map(p => p.trim()).filter(p => p.length > 1);
+  parts.forEach(part => {
+    const norm = normalize(part);
+    const esMatch = Object.entries(PERMS_ES_MAP).find(([k]) => normalize(k) === norm || norm.includes(normalize(k)));
+    if (esMatch) { results.add(esMatch[1]); return; }
+    const upper = part.toUpperCase().replace(/ANDROID\.PERMISSION\./g,'').replace(/[^A-Z0-9_]/g,'').trim();
+    if (upper.length > 2) results.add(upper);
+  });
+  return [...results];
+}
+
+// Permission chip selector
+let currentPermLang = 'es';
+
+function buildPermSelector() {
+  ['perm-selector','perm-selector-name','perm-selector-image'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel || sel.children.length > 0) return;
+    renderChips(sel, id);
+  });
+}
+
+function renderChips(sel, selectorId) {
+  const isImage = selectorId === 'perm-selector-image';
+  const lang = isImage ? currentPermLang : 'es';
+  const riskColor = { critical:'#991B1B', high:'#92400E', medium:'#374151', low:'#1B4332' };
+  const riskBg = { critical:'#FEE2E2', high:'#FEF3C7', medium:'#F3F4F6', low:'#D8EAE0' };
+  const order = { critical:0, high:1, medium:2, low:3 };
+  const sorted = Object.entries(PERMS_DB).sort((a,b) => order[a[1].risk] - order[b[1].risk]);
+  const prevSelected = sel.children.length > 0
+    ? [...sel.querySelectorAll('[data-selected="true"]')].map(b => b.dataset.perm)
+    : [];
+  sel.innerHTML = sorted.map(([key, val]) => {
+    const label = lang === 'es' ? val.es : val.en;
+    const isOn = prevSelected.includes(key);
+    return `<button onclick="togglePermChip(this,'${key}','${selectorId}')"
+      data-perm="${key}" data-selected="${isOn}"
+      title="${val.es} · ${val.en} · ${key}"
+      style="padding:4px 10px;border-radius:99px;border:1.5px solid ${riskColor[val.risk]}40;
+      background:${riskBg[val.risk]};color:${riskColor[val.risk]};font-size:0.7rem;
+      font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.15s;font-weight:500;
+      ${isOn ? 'box-shadow:0 0 0 2px var(--shield);transform:scale(1.05);' : ''}"
+      >${label}</button>`;
+  }).join('');
+}
+
+function setPermLang(lang) {
+  currentPermLang = lang;
+  const sel = document.getElementById('perm-selector-image');
+  if (sel) renderChips(sel, 'perm-selector-image');
+  document.getElementById('lang-es').style.cssText += lang==='es' ? ';background:var(--shield);color:white;border-color:var(--shield);' : ';background:white;color:var(--muted);border-color:var(--border);';
+  document.getElementById('lang-en').style.cssText += lang==='en' ? ';background:var(--shield);color:white;border-color:var(--shield);' : ';background:white;color:var(--muted);border-color:var(--border);';
+}
+
+function togglePermChip(btn, perm, selectorId) {
+  const on = btn.dataset.selected !== 'true';
+  btn.dataset.selected = on ? 'true' : 'false';
+  btn.style.boxShadow = on ? '0 0 0 2px var(--shield)' : 'none';
+  btn.style.transform = on ? 'scale(1.05)' : 'scale(1)';
+  updatePermFromSelector(selectorId);
+}
+
+function updatePermFromSelector(selectorId) {
+  const selected = [...document.querySelectorAll(`#${selectorId} [data-selected="true"]`)].map(b => b.dataset.perm);
+  const map = {'perm-selector':'perm-text','perm-selector-name':'perm-name-text','perm-selector-image':'perm-image-text'};
+  const inp = document.getElementById(map[selectorId]);
+  if (inp) inp.value = selected.join(', ');
+}
+
+function clearPermSelector(selectorId) {
+  document.querySelectorAll(`#${selectorId} button`).forEach(b => {
+    b.dataset.selected = 'false';
+    b.style.boxShadow = 'none';
+    b.style.transform = 'scale(1)';
+  });
+  const map = {'perm-selector':'perm-text','perm-selector-name':'perm-name-text','perm-selector-image':'perm-image-text'};
+  const inp = document.getElementById(map[selectorId]);
+  if (inp) inp.value = '';
+}
+
+function runPermiso() {
+  let permissions=[], appName='', appPurpose='';
+  const activeTab = document.querySelector('.tab-mini.active').textContent;
+  if (activeTab.includes('General')) {
+    const t = document.getElementById('perm-text').value;
+    if (!t.trim()) { alert('Selecciona al menos un permiso · Select at least one permission'); return; }
+    permissions = parsePerms(t);
+  } else if (activeTab.includes('App')) {
+    appName = document.getElementById('perm-app-name').value;
+    appPurpose = document.getElementById('perm-app-purpose').value.toLowerCase();
+    const t = document.getElementById('perm-name-text').value;
+    if (!t.trim()) { alert('Selecciona al menos un permiso · Select at least one permission'); return; }
+    permissions = parsePerms(t);
+  } else {
+    const t = document.getElementById('perm-image-text').value;
+    if (!t.trim()) { alert('Selecciona los permisos visibles en la captura · Select permissions visible in screenshot'); return; }
+    permissions = parsePerms(t);
+  }
+  if (!permissions.length) { alert('No se detectaron permisos · No permissions detected'); return; }
+
+  showLoader('permiso');
+
+  let purposeCats = [];
+  if (appPurpose) Object.entries(APP_PURPOSES_MAP).forEach(([k,v]) => { if (appPurpose.includes(k)) purposeCats=[...purposeCats,...v]; });
+
+  const key = getAPIKey();
+  if (key.startsWith('sk-ant-')) {
+    document.querySelector('#loader-permiso p').textContent = '🤖 Consultando IA… · Consulting AI…';
+    const prompt = `Eres experto en privacidad de apps móviles. Analiza los permisos de "${appName||'app desconocida'}" (función: "${appPurpose||'no especificada'}"): ${permissions.join(', ')}
+Responde SOLO en JSON:
+{"app_reputation":"reputación breve","overall_risk":"bajo|medio|alto|crítico","suspicious_permissions":[],"ai_verdict_es":"veredicto es","ai_verdict_en":"verdict en","recommendation_es":"recomendación"}`;
+    callClaude(prompt, true).then(ai => {
+      hideLoader('permiso');
+      renderPermiso(permissions, appName, appPurpose, purposeCats, ai);
+      showResult('permiso');
+    }).catch(() => {
+      hideLoader('permiso');
+      renderPermiso(permissions, appName, appPurpose, purposeCats, null);
+      showResult('permiso');
+    });
+  } else {
+    setTimeout(() => {
+      hideLoader('permiso');
+      renderPermiso(permissions, appName, appPurpose, purposeCats, null);
+      showResult('permiso');
+    }, 700);
+  }
+}
+
+function renderPermiso(permissions, appName, appPurpose, purposeCats, ai) {
+  let analyzed=[], unknown=[], crit=0, high=0, med=0, low=0;
+  permissions.forEach(p => {
+    const k = PERMS_DB[p];
+    if (k) {
+      const susp = purposeCats.length>0 && !k.cats.some(c=>purposeCats.includes(c)) && k.risk!=='low';
+      analyzed.push({perm:p,...k,suspicious:susp});
+      if(k.risk==='critical')crit++; else if(k.risk==='high')high++; else if(k.risk==='medium')med++; else low++;
+    } else unknown.push(p);
+  });
+
+  const score = Math.max(0, 100-(crit*25)-(high*12)-(med*5));
+  const suspCount = analyzed.filter(p=>p.suspicious).length;
+  let vClass, vIcon, vTitleES, vTitleEN;
+  if (crit>=2||score<40||(suspCount>=3&&purposeCats.length>0)) { vClass='danger'; vIcon='⚠️'; vTitleES='¡Cuidado! Esta app no parece fiable'; vTitleEN='Warning! App does not seem trustworthy'; }
+  else if (crit===1||score<65||(suspCount>=1&&purposeCats.length>0)) { vClass='warn'; vIcon='🔶'; vTitleES='Precaución — permisos cuestionables'; vTitleEN='Caution — questionable permissions'; }
+  else { vClass='safe'; vIcon='✅'; vTitleES='Permisos aparentemente razonables'; vTitleEN='Permissions appear reasonable'; }
+
+  if (ai) {
+    document.getElementById('permiso-ai').innerHTML = `
+      <div class="ai-result-card">
+        <h4>🤖 Análisis IA · AI Analysis</h4>
+        ${ai.app_reputation?`<p style="font-size:0.78rem;color:var(--muted);font-style:italic;margin-bottom:8px;">${ai.app_reputation}</p>`:''}
+        <p style="font-size:0.85rem;line-height:1.6;margin-bottom:6px;">${ai.ai_verdict_es}</p>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;">${ai.ai_verdict_en}</p>
+        <p style="font-size:0.8rem;font-weight:600;">💡 ${ai.recommendation_es}</p>
+      </div>`;
+  }
+
+  document.getElementById('permiso-verdict').innerHTML = `
+    <div class="verdict-card ${vClass}">
+      <div class="verdict-icon">${vIcon}</div>
+      <div>
+        <div class="verdict-title">${vTitleES}</div>
+        <div class="verdict-desc">${vTitleEN}${appName?' · App: '+appName:''}</div>
+      </div>
+    </div>`;
+
+  const barClass = score>=65?'safe':score>=40?'warn':'danger';
+  document.getElementById('permiso-score').innerHTML = `
+    <div class="score-row">
+      <div class="score-label"><span>Trust Score</span><span>${score}/100 · ${crit}🚨 ${high}⚠️ ${med}🔶 ${low}✅</span></div>
+      <div class="bar"><div class="bar-inner ${barClass}" style="width:${score}%"></div></div>
+    </div>`;
+
+  const order={critical:0,high:1,medium:2,low:3};
+  analyzed.sort((a,b)=>order[a.risk]-order[b.risk]);
+  let listHTML = '';
+  analyzed.forEach(p => {
+    const rMap={critical:'dangerous',high:'suspicious',medium:'suspicious',low:'ok'};
+    const rc = rMap[p.risk];
+    const rIcon={critical:'🚨',high:'⚠️',medium:'🔶',low:'✅'}[p.risk];
+    listHTML+=`<div class="perm-row ${rc}">
+      <div style="flex:1"><div class="perm-name">${rIcon} ${p.perm}</div><div class="perm-desc">${p.es} · ${p.en}${p.suspicious?' · <span style="color:var(--warn)">⚠️ Atípico para esta app</span>':''}</div></div>
+      <div class="badge ${rc}">${p.risk}</div></div>`;
+  });
+  if (unknown.length) listHTML+=`<div class="perm-row" style="border-color:var(--border)"><div><div class="perm-name">❓ No reconocidos · Unrecognized</div><div class="perm-desc">${unknown.join(', ')}</div></div></div>`;
+  document.getElementById('permiso-list').innerHTML = listHTML;
+  document.getElementById('voice-permiso').style.display = 'block';
+}
+
+// Voice reader — PermisoClaro
+let permisoSpeech = null;
+let permisoSpeaking = false;
+
+function speakPermiso() {
+  if (permisoSpeaking) return;
+  const parts = [
+    document.getElementById('permiso-verdict')?.innerText || '',
+    document.getElementById('permiso-score')?.innerText || '',
+    document.getElementById('permiso-summary')?.innerText || '',
+    document.getElementById('permiso-list')?.innerText || ''
+  ].filter(Boolean).join('. ');
+
+  if (!parts.trim()) return;
+  const speed = parseFloat(document.getElementById('speed-permiso').value);
+  permisoSpeech = new SpeechSynthesisUtterance(parts);
+  permisoSpeech.lang = 'es-ES';
+  permisoSpeech.rate = speed;
+
+  permisoSpeech.onstart = () => {
+    permisoSpeaking = true;
+    document.getElementById('play-permiso').textContent = '🔊 Leyendo...';
+    document.getElementById('stop-permiso').style.display = 'inline-block';
+  };
+  permisoSpeech.onend = () => {
+    permisoSpeaking = false;
+    document.getElementById('play-permiso').textContent = '▶ Leer resultado · Read result';
+    document.getElementById('stop-permiso').style.display = 'none';
+  };
+  window.speechSynthesis.speak(permisoSpeech);
+}
+
+function stopPermiso() {
+  window.speechSynthesis.cancel();
+  permisoSpeaking = false;
+  document.getElementById('play-permiso').textContent = '▶ Leer resultado · Read result';
+  document.getElementById('stop-permiso').style.display = 'none';
+}
+
+document.getElementById('speed-permiso')?.addEventListener('input', () => {
+  document.getElementById('speed-permiso-val').textContent = document.getElementById('speed-permiso').value + 'x';
+});
+
+// ═══════════════════════════════
+// MODULE 3: HUELLA DIGITAL
+// ═══════════════════════════════
+function loadHuellaData() {
+  const items = [
+    { label:'Navegador · Browser', value: navigator.userAgent.split(' ').slice(-2).join(' '), full: navigator.userAgent, risk:'high' },
+    { label:'Idioma · Language', value: navigator.language, risk:'med' },
+    { label:'Zona horaria · Timezone', value: Intl.DateTimeFormat().resolvedOptions().timeZone, risk:'med' },
+    { label:'Resolución · Screen', value: `${screen.width}×${screen.height}`, risk:'med' },
+    { label:'Plataforma · Platform', value: navigator.platform, risk:'high' },
+    { label:'Cookies activas · Cookies enabled', value: navigator.cookieEnabled ? '✅ Sí · Yes' : '❌ No', risk:'high' },
+    { label:'Conexión · Connection', value: navigator.onLine ? 'Online' : 'Offline', risk:'med' },
+    { label:'CPU cores', value: navigator.hardwareConcurrency || 'N/A', risk:'med' },
+    { label:'Memoria aprox · Memory', value: (navigator.deviceMemory || 'N/A') + ' GB', risk:'med' },
+    { label:'Do Not Track', value: navigator.doNotTrack === '1' ? '✅ Activo' : '❌ Inactivo', risk:'high' },
+  ];
+
+  let html = '';
+  items.forEach(item => {
+    html += `<div class="huella-item ${item.risk==='high'?'risk-high':'risk-med'}">
+      <div class="h-label">${item.label}</div>
+      <div class="h-value">${item.value}</div>
+      ${item.risk==='high'?'<div class="h-risk" style="color:var(--warn)">⚠️ Expuesto</div>':''}
+    </div>`;
+  });
+  document.getElementById('huella-grid').innerHTML = html;
+}
+
+function runHuella() {
+  const cookieText = document.getElementById('cookie-text').value.trim();
+  showLoader('huella');
+
+  const key = getAPIKey();
+  if (cookieText && key.startsWith('sk-ant-')) {
+    document.querySelector('#loader-huella p').textContent = '🤖 Analizando con IA… · Analyzing with AI…';
+    const prompt = `Eres experto en privacidad digital y cookies. Analiza este texto de política de cookies o datos de cookies:
+"${cookieText.slice(0,1500)}"
+Responde SOLO en JSON:
+{"riesgo":"bajo|medio|alto|crítico","cookies_terceros":true|false,"veredicto_es":"veredicto en español","veredicto_en":"verdict in English","recomendacion_es":"recomendación"}`;
+    callClaude(prompt, false).then(ai => {
+      hideLoader('huella');
+      renderHuella(cookieText, ai);
+      showResult('huella');
+    }).catch(() => {
+      hideLoader('huella');
+      renderHuella(cookieText, null);
+      showResult('huella');
+    });
+  } else {
+    setTimeout(() => {
+      hideLoader('huella');
+      renderHuella(cookieText, null);
+      showResult('huella');
+    }, 600);
+  }
+}
+
+function renderHuella(cookieText, ai) {
+  let risk = 'safe', riskIcon = '✅', riskTitleES = 'Sin cookies de rastreo detectadas', riskTitleEN = 'No tracking cookies detected';
+  let detailsHTML = '';
+
+  if (cookieText) {
+    // Offline pattern detection
+    const trackers = [];
+    const patterns = [
+      { rx:/google.tag|gtag|google analytics|ga\(/i, label:'Google Analytics / Tag Manager', level:'danger' },
+      { rx:/facebook|fbq|fb pixel/i, label:'Facebook Pixel', level:'danger' },
+      { rx:/doubleclick|gads/i, label:'Google Ads / DoubleClick', level:'danger' },
+      { rx:/hotjar/i, label:'Hotjar (grabación de sesiones)', level:'danger' },
+      { rx:/advertising|publicidad/i, label:'Cookies publicitarias · Advertising cookies', level:'danger' },
+      { rx:/third.party|terceros/i, label:'Cookies de terceros · Third-party cookies', level:'danger' },
+      { rx:/tracking|rastreo|seguimiento/i, label:'Cookies de rastreo · Tracking cookies', level:'danger' },
+      { rx:/analytics/i, label:'Analytics', level:'warn' },
+      { rx:/session|sesion/i, label:'Cookies de sesión · Session cookies', level:'warn' },
+      { rx:/preferences|preferencias/i, label:'Cookies de preferencias · Preference cookies', level:'warn' },
+      { rx:/functional|funcional/i, label:'Cookies funcionales · Functional cookies', level:'warn' },
+      { rx:/necessary|necesaria/i, label:'Cookies necesarias · Necessary cookies', level:'ok' },
+    ];
+
+    patterns.forEach(p => {
+      if (p.rx.test(cookieText)) trackers.push(p);
+    });
+
+    const hasDanger = trackers.some(t => t.level === 'danger');
+    const hasWarn = trackers.some(t => t.level === 'warn');
+
+    if (hasDanger) {
+      risk = 'danger'; riskIcon = '⚠️';
+      riskTitleES = 'Cookies de rastreo y/o publicidad detectadas';
+      riskTitleEN = 'Tracking and/or advertising cookies detected';
+    } else if (hasWarn) {
+      risk = 'warn'; riskIcon = '🔶';
+      riskTitleES = 'Cookies funcionales y de análisis';
+      riskTitleEN = 'Functional and analytics cookies';
+    }
+
+    if (trackers.length > 0) {
+      detailsHTML = '<div style="margin-top:12px;">';
+      trackers.forEach(t => {
+        const rc = t.level === 'danger' ? 'dangerous' : t.level === 'warn' ? 'suspicious' : 'ok';
+        const icon = t.level === 'danger' ? '⚠️' : t.level === 'warn' ? '🔶' : '✅';
+        detailsHTML += `<div class="perm-row ${rc}" style="margin-bottom:6px;">
+          <div><div class="perm-name">${icon} ${t.label}</div></div>
+          <div class="badge ${rc}">${t.level}</div>
+        </div>`;
+      });
+      detailsHTML += '</div>';
+    } else {
+      detailsHTML = '<p style="font-size:0.82rem;color:var(--muted);margin-top:10px;">No se detectaron patrones de cookies conocidos en el texto. · No known cookie patterns detected in the text.</p>';
+    }
+  } else {
+    riskTitleES = 'Datos del navegador analizados';
+    riskTitleEN = 'Browser data analyzed';
+    detailsHTML = '<p style="font-size:0.82rem;color:var(--muted);margin-top:10px;">Revisa los datos expuestos por tu navegador arriba. Para analizar cookies, pega el texto de la política. · Review your browser data above. To analyze cookies, paste the cookie policy text.</p>';
+  }
+
+  document.getElementById('huella-verdict').innerHTML = `
+    <div class="verdict-card ${risk}">
+      <div class="verdict-icon">${riskIcon}</div>
+      <div>
+        <div class="verdict-title">${riskTitleES}</div>
+        <div class="verdict-desc">${riskTitleEN}</div>
+      </div>
+    </div>
+    ${detailsHTML}`;
+
+  if (ai) {
+    document.getElementById('huella-ai').innerHTML = `
+      <div class="ai-result-card">
+        <h4>🤖 Análisis IA · AI Analysis</h4>
+        <p style="font-size:0.85rem;line-height:1.6;margin-bottom:6px;">${ai.veredicto_es}</p>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;">${ai.veredicto_en}</p>
+        <p style="font-size:0.8rem;font-weight:600;">💡 ${ai.recomendacion_es}</p>
+      </div>`;
+  } else {
+    document.getElementById('huella-ai').innerHTML = '';
+  }
+}
+
+// ═══════════════════════════════
+// MODULE 4: VALIDADOR DE CÓDIGO
+// ═══════════════════════════════
+const CODE_CHECKS = [
+  {
+    id: 'curly_double',
+    es: 'Comillas dobles tipográficas — rompen JS/HTML',
+    en: 'Typographic double quotes — break JS/HTML',
+    level: 'danger',
+    rx: /[\u201C\u201D]/g,
+    fix: (s) => s.replace(/[\u201C\u201D]/g, '"'),
+    example: '\u201C \u201D → "'
+  },
+  {
+    id: 'curly_single',
+    es: 'Comillas simples tipográficas — rompen JS',
+    en: 'Typographic single quotes — break JS',
+    level: 'danger',
+    rx: /[\u2018\u2019]/g,
+    fix: (s) => s.replace(/[\u2018\u2019]/g, "'"),
+    example: "\u2018 \u2019 → '"
+  },
+  {
+    id: 'backtick_look',
+    es: 'Acento grave tipográfico — rompe template literals',
+    en: 'Typographic backtick — breaks template literals',
+    level: 'danger',
+    rx: /[\u0060\uFF40\u02CB]/g,
+    fix: (s) => s.replace(/[\u0060\uFF40\u02CB]/g, '`'),
+    example: '` tipográfico → `'
+  },
+  {
+    id: 'zero_width',
+    es: 'Caracteres de ancho cero — invisibles y peligrosos',
+    en: 'Zero-width characters — invisible and dangerous',
+    level: 'danger',
+    rx: /[\u200B\u200C\u200D\uFEFF\u00AD]/g,
+    fix: (s) => s.replace(/[\u200B\u200C\u200D\uFEFF\u00AD]/g, ''),
+    example: 'Carácter invisible eliminado'
+  },
+  {
+    id: 'mdash',
+    es: 'Guión largo/medio — puede romper operadores JS',
+    en: 'Em/en dash — may break JS operators',
+    level: 'warn',
+    rx: /[\u2013\u2014]/g,
+    fix: (s) => s.replace(/[\u2013\u2014]/g, '-'),
+    example: '— – → -'
+  },
+  {
+    id: 'ellipsis',
+    es: 'Puntos suspensivos tipográficos — no son tres puntos',
+    en: 'Typographic ellipsis — not three dots',
+    level: 'warn',
+    rx: /[\u2026]/g,
+    fix: (s) => s.replace(/[\u2026]/g, '...'),
+    example: '… → ...'
+  },
+  {
+    id: 'nbsp',
+    es: 'Espacio de no separación — invisible en editores',
+    en: 'Non-breaking space — invisible in editors',
+    level: 'warn',
+    rx: /[\u00A0\u202F\u2007]/g,
+    fix: (s) => s.replace(/[\u00A0\u202F\u2007]/g, ' '),
+    example: 'NBSP → espacio normal'
+  },
+  {
+    id: 'full_width',
+    es: 'Caracteres de ancho completo (unicode fullwidth)',
+    en: 'Full-width unicode characters',
+    level: 'warn',
+    rx: /[\uFF01-\uFF5E]/g,
+    fix: (s) => s,
+    example: 'ａ ｂ ｃ → a b c'
+  },
+];
+
+function runCodigo() {
+  const code = document.getElementById('codigo-text').value;
+  if (!code.trim()) { alert('Pega código para validar · Paste code to validate'); return; }
+
+  showLoader('codigo');
+
+  setTimeout(() => {
+    hideLoader('codigo');
+    renderCodigo(code);
+    showResult('codigo');
+  }, 400);
+}
+
+function renderCodigo(code) {
+  const found = [];
+  let fixed = code;
+  let totalIssues = 0;
+
+  CODE_CHECKS.forEach(check => {
+    const matches = code.match(check.rx);
+    if (matches) {
+      found.push({ ...check, count: matches.length });
+      fixed = check.fix(fixed);
+      totalIssues += matches.length;
+    }
+  });
+
+  // Verdict
+  const hasDanger = found.some(f => f.level === 'danger');
+  const hasWarn = found.some(f => f.level === 'warn');
+  let vClass, vIcon, vTitleES, vTitleEN;
+
+  if (hasDanger) {
+    vClass = 'danger'; vIcon = '🚨';
+    vTitleES = `¡Errores críticos detectados! (${totalIssues} problema${totalIssues>1?'s':''})`;
+    vTitleEN = `Critical errors detected! (${totalIssues} issue${totalIssues>1?'s':''})`;
+  } else if (hasWarn) {
+    vClass = 'warn'; vIcon = '🔶';
+    vTitleES = `Advertencias detectadas (${totalIssues} problema${totalIssues>1?'s':''})`;
+    vTitleEN = `Warnings detected (${totalIssues} issue${totalIssues>1?'s':''})`;
+  } else {
+    vClass = 'safe'; vIcon = '✅';
+    vTitleES = 'Código limpio — sin problemas detectados';
+    vTitleEN = 'Clean code — no issues detected';
+  }
+
+  document.getElementById('codigo-verdict').innerHTML = `
+    <div class="verdict-card ${vClass}">
+      <div class="verdict-icon">${vIcon}</div>
+      <div>
+        <div class="verdict-title">${vTitleES}</div>
+        <div class="verdict-desc">${vTitleEN}</div>
+      </div>
+    </div>`;
+
+  // Issues list
+  let issuesHTML = '';
+  if (found.length > 0) {
+    issuesHTML = '<div style="margin:12px 0;">';
+    found.forEach(f => {
+      const rc = f.level === 'danger' ? 'dangerous' : 'suspicious';
+      const icon = f.level === 'danger' ? '🚨' : '🔶';
+      issuesHTML += `<div class="perm-row ${rc}" style="margin-bottom:6px;">
+        <div style="flex:1">
+          <div class="perm-name">${icon} ${f.es}</div>
+          <div class="perm-desc">${f.en} · ${f.count} ocurrencia${f.count>1?'s':''} · ${f.example}</div>
+        </div>
+        <div class="badge ${rc}">${f.count}x</div>
+      </div>`;
+    });
+    issuesHTML += '</div>';
+  }
+  document.getElementById('codigo-issues').innerHTML = issuesHTML;
+
+  // Fixed code
+  if (found.length > 0) {
+    const hasAutofix = found.some(f => f.fix(f.id) !== f.id || f.level === 'danger');
+    document.getElementById('codigo-fixed').innerHTML = `
+      <div style="margin-top:12px;">
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--shield);margin-bottom:8px;">
+          ✨ Código corregido · Fixed code
+        </div>
+        <div style="position:relative;">
+          <textarea readonly style="width:100%;min-height:120px;padding:12px 14px;border:1.5px solid var(--shield-light);border-radius:9px;font-family:'DM Mono',monospace;font-size:0.75rem;background:var(--shield-light);color:var(--text);resize:vertical;">${fixed.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>
+          <button onclick="copyFixed()" style="position:absolute;top:8px;right:8px;padding:4px 10px;background:var(--shield);color:white;border:none;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;">📋 Copiar</button>
+        </div>
+        <p style="font-size:0.72rem;color:var(--muted);margin-top:6px;">Las comillas tipográficas, caracteres invisibles y guiones han sido reemplazados automáticamente. · Typographic quotes, invisible characters and dashes have been automatically replaced.</p>
+      </div>`;
+  } else {
+    document.getElementById('codigo-fixed').innerHTML = '';
+  }
+}
+
+function copyFixed() {
+  const ta = document.querySelector('#codigo-fixed textarea');
+  if (!ta) return;
+  navigator.clipboard.writeText(ta.value).then(() => {
+    const btn = document.querySelector('#codigo-fixed button');
+    btn.textContent = '✅ Copiado';
+    setTimeout(() => btn.textContent = '📋 Copiar', 2000);
+  });
+}
+
+// ═══════════════════════════════
+// MODULE 5: METADATOS
+// ═══════════════════════════════
+let metaFileData = null;
+
+function handleMetaFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  metaFileData = file;
+  document.getElementById('meta-filename').style.display = 'block';
+  document.getElementById('meta-filename').textContent = `📄 ${file.name} · ${(file.size/1024).toFixed(1)} KB · ${file.type||'tipo desconocido'}`;
+  document.getElementById('meta-btn').disabled = false;
+  document.getElementById('meta-btn').style.opacity = '1';
+}
+
+function runMeta() {
+  if (!metaFileData) return;
+  showLoader('meta');
+
+  const file = metaFileData;
+  const basicMeta = extractBasicMeta(file);
+
+  // For images, try EXIF
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const exif = extractEXIF(e.target.result, file.name);
+      const allMeta = { ...basicMeta, ...exif };
+      hideLoader('meta');
+      renderMeta(allMeta, file);
+      showResult('meta');
+
+      // AI if available
+      const key = getAPIKey();
+      if (key.startsWith('sk-ant-')) {
+        analyzeMetaWithAI(allMeta, file.name).then(ai => {
+          if (ai) {
+            document.getElementById('meta-ai').innerHTML = `
+              <div class="ai-result-card" style="margin-top:12px;">
+                <h4>🤖 Análisis IA · AI Analysis</h4>
+                <p style="font-size:0.85rem;line-height:1.6;margin-bottom:6px;">${ai.analisis_es}</p>
+                <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;">${ai.analysis_en}</p>
+                <p style="font-size:0.8rem;font-weight:600;">💡 ${ai.recomendacion_es}</p>
+              </div>`;
+          }
+        });
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    setTimeout(() => {
+      hideLoader('meta');
+      renderMeta(basicMeta, file);
+      showResult('meta');
+    }, 500);
+  }
+}
+
+function extractBasicMeta(file) {
+  const meta = {};
+  meta['Nombre · Name'] = { value: file.name, risk: 'low' };
+  meta['Tipo · Type'] = { value: file.type || 'desconocido', risk: 'low' };
+  meta['Tamaño · Size'] = { value: `${(file.size/1024).toFixed(2)} KB (${file.size} bytes)`, risk: 'low' };
+  meta['Última modificación · Last modified'] = { value: new Date(file.lastModified).toLocaleString(), risk: 'medium' };
+
+  // Extension check
+  const ext = file.name.split('.').pop().toLowerCase();
+  const sensitiveExts = ['jpg','jpeg','png','heic','heif','tiff'];
+  if (sensitiveExts.includes(ext)) {
+    meta['Riesgo extensión · Extension risk'] = { value: `${ext.toUpperCase()} — puede contener GPS y datos EXIF`, risk: 'high' };
+  }
+  return meta;
+}
+
+function extractEXIF(buffer, filename) {
+  const meta = {};
+  try {
+    const view = new DataView(buffer);
+
+    // Check JPEG magic bytes
+    if (view.getUint8(0) !== 0xFF || view.getUint8(1) !== 0xD8) return meta;
+
+    let offset = 2;
+    while (offset < view.byteLength - 2) {
+      if (view.getUint8(offset) !== 0xFF) break;
+      const marker = view.getUint8(offset + 1);
+      const length = view.getUint16(offset + 2);
+
+      if (marker === 0xE1) {
+        // APP1 - EXIF
+        const exifHeader = String.fromCharCode(
+          view.getUint8(offset+4), view.getUint8(offset+5),
+          view.getUint8(offset+6), view.getUint8(offset+7)
+        );
+        if (exifHeader === 'Exif') {
+          meta['EXIF detectado · EXIF detected'] = { value: '⚠️ Este archivo contiene datos EXIF · This file contains EXIF data', risk: 'high' };
+
+          // Try to find GPS marker in raw bytes
+          const bytes = new Uint8Array(buffer, offset, Math.min(length, 2000));
+          const str = Array.from(bytes).map(b => String.fromCharCode(b)).join('');
+
+          if (str.includes('GPS')) {
+            meta['GPS'] = { value: '⚠️ Posible dato GPS embebido · Possible embedded GPS data', risk: 'critical' };
+          }
+          if (str.includes('Canon') || str.includes('Nikon') || str.includes('Apple') || str.includes('Samsung') || str.includes('Xiaomi') || str.includes('Huawei')) {
+            const brands = ['Canon','Nikon','Apple','Samsung','Xiaomi','Huawei','Sony','Google'];
+            const found = brands.filter(b => str.includes(b));
+            meta['Dispositivo · Device'] = { value: found.join(', '), risk: 'high' };
+          }
+          // Date search
+          const dateMatch = str.match(/20\d{2}:\d{2}:\d{2}/);
+          if (dateMatch) {
+            meta['Fecha captura · Capture date'] = { value: dateMatch[0].replace(/:/g,'-').replace('-',':').replace('-',':'), risk: 'medium' };
+          }
+          // Software
+          if (str.includes('Photoshop') || str.includes('Lightroom') || str.includes('GIMP') || str.includes('Photos')) {
+            const sw = ['Photoshop','Lightroom','GIMP','Photos','Snapseed'].filter(s => str.includes(s));
+            meta['Software'] = { value: sw.join(', '), risk: 'medium' };
+          }
+        }
+      }
+      if (marker === 0xDA) break; // Start of scan
+      offset += 2 + length;
+    }
+  } catch(e) {
+    meta['Error EXIF'] = { value: 'No se pudo leer EXIF · Could not read EXIF', risk: 'low' };
+  }
+  return meta;
+}
+
+async function analyzeMetaWithAI(meta, filename) {
+  const key = getAPIKey();
+  if (!key.startsWith('sk-ant-')) return null;
+  const metaSummary = Object.entries(meta).map(([k,v]) => `${k}: ${v.value}`).join('\n');
+  const prompt = `Eres experto en privacidad digital y metadatos de archivos.
+Analiza estos metadatos del archivo "${filename}":
+${metaSummary}
+Responde SOLO en JSON:
+{"analisis_es":"análisis de privacidad en español (2-3 frases)","analysis_en":"privacy analysis in English (2-3 sentences)","recomendacion_es":"recomendación concreta"}`;
+  return await callClaude(prompt, false);
+}
+
+function renderMeta(meta, file) {
+  const entries = Object.entries(meta);
+  const hasCritical = entries.some(([,v]) => v.risk === 'critical');
+  const hasHigh = entries.some(([,v]) => v.risk === 'high');
+
+  let vClass, vIcon, vTitleES, vTitleEN;
+  if (hasCritical) {
+    vClass='danger'; vIcon='🚨'; vTitleES='¡Datos muy sensibles detectados!'; vTitleEN='Very sensitive data detected!';
+  } else if (hasHigh) {
+    vClass='warn'; vIcon='⚠️'; vTitleES='Metadatos con información personal'; vTitleEN='Metadata contains personal information';
+  } else {
+    vClass='safe'; vIcon='✅'; vTitleES='Metadatos básicos — sin datos sensibles'; vTitleEN='Basic metadata — no sensitive data';
+  }
+
+  document.getElementById('meta-verdict').innerHTML = `
+    <div class="verdict-card ${vClass}">
+      <div class="verdict-icon">${vIcon}</div>
+      <div>
+        <div class="verdict-title">${vTitleES}</div>
+        <div class="verdict-desc">${vTitleEN} · ${file.name}</div>
+      </div>
+    </div>`;
+
+  const riskOrder = { critical:0, high:1, medium:2, low:3 };
+  const sorted = entries.sort((a,b) => riskOrder[a[1].risk] - riskOrder[b[1].risk]);
+
+  let tableHTML = '<div style="margin-top:12px;">';
+  sorted.forEach(([key, val]) => {
+    const rc = val.risk === 'critical' ? 'dangerous' : val.risk === 'high' ? 'suspicious' : val.risk === 'medium' ? 'suspicious' : 'ok';
+    const icon = val.risk === 'critical' ? '🚨' : val.risk === 'high' ? '⚠️' : val.risk === 'medium' ? '🔶' : '✅';
+    tableHTML += `<div class="perm-row ${rc}" style="margin-bottom:6px;">
+      <div style="flex:1">
+        <div class="perm-name">${icon} ${key}</div>
+        <div class="perm-desc" style="font-family:'DM Mono',monospace;font-size:0.75rem;">${val.value}</div>
+      </div>
+      <div class="badge ${rc}">${val.risk}</div>
+    </div>`;
+  });
+  tableHTML += '</div>';
+
+  if (file.type.startsWith('image/')) {
+    tableHTML += `<div style="margin-top:12px;padding:12px;background:var(--warn-light);border-radius:9px;border:1px solid #fbbf24;">
+      <p style="font-size:0.78rem;font-weight:600;color:var(--warn);margin-bottom:4px;">💡 ¿Cómo eliminar metadatos? · How to remove metadata?</p>
+      <p style="font-size:0.75rem;color:var(--text-muted);line-height:1.5;">
+        Android/iOS: comparte la foto por WhatsApp (reduce calidad y elimina EXIF) · Windows: clic derecho → Propiedades → Detalles → Quitar propiedades · Mac: Exportar como nueva copia desde Fotos.
+      </p>
+    </div>`;
+  }
+
+  document.getElementById('meta-table').innerHTML = tableHTML;
+}
+
+// Init
+loadHuellaData();
+buildPermSelector();
+</script>
+</body>
+</html>
